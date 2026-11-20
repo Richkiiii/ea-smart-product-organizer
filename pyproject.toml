@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rea-smart-product-organizer"
+version = "0.3.0.dev0"
+description = "REA Smart Product Organizer - offline product image matching, grouping and best-image selection"
+requires-python = ">=3.11"
+license = { text = "Proprietary" }
+dependencies = [
+    "numpy>=1.26",
+    "opencv-contrib-python-headless>=4.9",
+    "Pillow>=10.2",
+    "onnxruntime>=1.18 ; sys_platform != 'win32'",
+    "onnxruntime-directml>=1.18 ; sys_platform == 'win32'",
+    "openpyxl>=3.1",
+    "jinja2>=3.1",
+]
+
+[project.optional-dependencies]
+# Installed in the Windows build and CI; the engine falls back gracefully without them.
+fast = ["faiss-cpu>=1.8", "rapidfuzz>=3.6"]
+ui = ["PySide6>=6.7"]
+ocr = ["rapidocr-onnxruntime>=1.3"]
+dev = ["pytest>=8", "pytest-qt>=4.4", "pyinstaller>=6.6"]
+export = ["torch>=2.3", "transformers>=4.49", "onnx>=1.16", "onnxruntime>=1.18"]
+
+[project.scripts]
+rea-spo = "rea_spo.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+rea_spo = ["storage/migrations/*.sql"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = ["slow: longer integration runs"]
